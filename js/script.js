@@ -3,7 +3,6 @@ let todos = ['item1', 'item2', 'item3', 'item4'];
 //This function should display my todos list
 function displayTodos() {
     console.log('My todos:', todos);
-
 }
 
 //This function should add an item to my todos list
@@ -30,26 +29,14 @@ function insertTodo(position, newItem){
     displayTodos();
 }
 
-displayTodos();
-addTodo('item5');
-editTodo(4, 'item6');
-deleteTodo(4);
-insertTodo(2, 'newitem');
-deleteTodo(2);
-
 //this object has properties and values of my computer
 let myComputer = {
     operatingSystem: 'macOS',
     screenSize: '15 inches',
     purchaseYear: 2011
-}
+};
 
 console.log('\n');
-
-//accessing the properties of my computer to display the values
-console.log(myComputer.operatingSystem);
-console.log(myComputer.purchaseYear);
-console.log(myComputer.screenSize);
 
 //the person object has functions on it
 let person = {
@@ -64,7 +51,21 @@ let person = {
     ageToday: function () {
         console.log(this.age);
     }
-}
+};
 
+
+displayTodos();
+addTodo('item5');
+editTodo(4, 'item6');
+deleteTodo(4);
+insertTodo(2, 'newitem');
+deleteTodo(2);
+
+//accessing the properties of my computer to display the values
+console.log(myComputer.operatingSystem);
+console.log(myComputer.purchaseYear);
+console.log(myComputer.screenSize);
+
+//accessing the function properties of the object person
 person.sayName();
 person.ageToday();

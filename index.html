@@ -5,9 +5,28 @@
     <title>TodosList</title>
 </head>
 <body>
-<div id="TodosText"><h1>Todos List</h1></div>
-<button id="displayTodosButton">Display Todos</button>
-<button id="toggleAll">Toggle All</button>
+    <div id="TodosText"><h1>Todos List</h1></div>
+    <div>
+        <button onclick="handlers.displayTodosButton()">Display Todos</button>
+        <button onclick="handlers.toggleAll()">Toggle All</button>
+    </div>
+    <div>
+        <button onclick="handlers.addTodos()">Add Todo</button>
+        <input type="text" id="addTodoTextInput">
+    </div>
+    <div>
+        <button onclick="handlers.changeTodo()">Change Todo</button>
+        <input type="number" id="changeTodoPositionInput">
+        <input type="text" id="changeTodoTextInput">
+    </div>
+    <div>
+        <button onclick="handlers.deleteTodo()">Delete Todo</button>
+        <input type="number" id="deleteTodoPositionInput">
+    </div>
+    <div>
+        <button onclick="handlers.toggleTodo()">Toggle a Todo</button>
+        <input type="number" id="toggleTodoPositionInput">
+    </div>
 
 <script src="js/todosController.js"></script>
 

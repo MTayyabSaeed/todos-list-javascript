@@ -1,7 +1,6 @@
 let todoList = {
     //declaring todos array as a property
     todos: [],
-
     displayTodos: function() {
         console.log('My Todos: ');
         if (this.todos.length === 0) {
@@ -70,6 +69,8 @@ let todoList = {
         this.displayTodos();
     }
 };
+
+//----------------------------------------------------------------------------------------------------------------------------------
 /*
  * This code is from the stackoverflow thread I posted, below is the link
  * https://stackoverflow.com/questions/47238309/error-cannot-find-module-node-jsdom/47241559?noredirect=1#comment81444646_47241559
@@ -102,16 +103,13 @@ function showData() {
 showData();
 
 */
+//----------------------------------------------------------------------------------------------------------------------------------
+/*
+ * Refactoring this code, I am keeping this as a comment because this is the normal and
+ * more flexible way to do it but I want learn more further
+ * You can use either this commented code or the refactored code down there
 
-
-todoList.displayTodos();
-todoList.addTodos('first');
-todoList.addTodos('second');
-todoList.addTodos('third');
-todoList.toggleCompleted(0);
-
-todoList.allCompleted();
- let displayTodosButton = document.getElementById('displayTodosButton');
+let displayTodosButton = document.getElementById('displayTodosButton');
 console.log(displayTodosButton);
 
 displayTodosButton.addEventListener('click', function() {
@@ -122,3 +120,39 @@ let toggleAll = document.getElementById('toggleAll');
 toggleAll.addEventListener('click', function() {
     todoList.allCompleted();
 });
+*/
+//----------------------------------------------------------------------------------------------------------------------------------
+
+//handlers object would give access to function to be attached to buttons in html
+let handlers ={
+    displayTodosButton: function () {
+        todoList.displayTodos();
+    },
+    toggleAll: function () {
+        todoList.allCompleted();
+    },
+    addTodos: function () {
+        let addTodoTextInput = document.getElementById('addTodoTextInput');
+        todoList.addTodos(addTodoTextInput.value);
+        addTodoTextInput.value = '';
+    },
+    changeTodo: function () {
+        let changeTodoPositionInput = document.getElementById('changeTodoPositionInput');
+        let changeTodoTextInput = document.getElementById('changeTodoTextInput');
+        todoList.changeTodo(changeTodoPositionInput.valueAsNumber, changeTodoTextInput.value);
+        changeTodoPositionInput.value = '';
+        changeTodoTextInput.value = '';
+    },
+    deleteTodo: function () {
+        let deleteTodoPositionInput = document.getElementById('deleteTodoPositionInput');
+        todoList.deleteTodo(deleteTodoPositionInput.valueAsNumber);
+        deleteTodoPositionInput.value = '';
+
+    },
+    toggleTodo: function () {
+        let toggleTodoPositionInput = document.getElementById('toggleTodoPositionInput');
+        todoList.toggleCompleted(toggleTodoPositionInput.valueAsNumber);
+        toggleTodoPositionInput.value = '';
+    }
+
+};

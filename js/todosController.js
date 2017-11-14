@@ -1,46 +1,30 @@
 let todoList = {
     //declaring todos array as a property
     todos: [],
-    displayTodos: function() {
-        console.log('My Todos: ');
-        if (this.todos.length === 0) {
-            console.log("todo list is empty");
-        } else {
-            for (let i = 0; i < this.todos.length; i++) {
-                if (this.todos[i].completed === true) {
-                    console.log('(X)', this.todos[i].todoText);
-                } else {
-                    console.log('( )', this.todos[i].todoText);
-                }
-            }
-        }
-    },
 
     addTodos: function(todoText) {
         //passing an oject as an element to the todos arrray
-        this.todos.push({
-            //this passed object has two properties
-            todoText: todoText,
-            completed: false
-        });
-        this.displayTodos();
+        if(todoText !== ''){
+            this.todos.push({
+                //this passed object has two properties
+                todoText: todoText,
+                completed: false
+            })
+        }
     },
 
     changeTodo: function(position, newTodoText) {
         //changing text at a specific index in the object array
         this.todos[position].todoText = newTodoText;
-        this.displayTodos();
     },
 
     deleteTodo: function(position) {
         this.todos.splice(position, 1);
-        this.displayTodos();
     },
 
     toggleCompleted: function(position) {
         let todo = this.todos[position];
         todo.completed = !todo.completed;
-        this.displayTodos();
     },
 
     allCompleted: function() {
@@ -66,7 +50,6 @@ let todoList = {
                 }
             }
         }
-        this.displayTodos();
     }
 };
 
@@ -124,17 +107,16 @@ toggleAll.addEventListener('click', function() {
 //----------------------------------------------------------------------------------------------------------------------------------
 
 //handlers object would give access to function to be attached to buttons in html
-let handlers ={
-    displayTodosButton: function () {
-        todoList.displayTodos();
-    },
+let handlers = {
     toggleAll: function () {
         todoList.allCompleted();
+        view.displayTodos();
     },
     addTodos: function () {
         let addTodoTextInput = document.getElementById('addTodoTextInput');
         todoList.addTodos(addTodoTextInput.value);
         addTodoTextInput.value = '';
+        view.displayTodos();
     },
     changeTodo: function () {
         let changeTodoPositionInput = document.getElementById('changeTodoPositionInput');
@@ -142,17 +124,43 @@ let handlers ={
         todoList.changeTodo(changeTodoPositionInput.valueAsNumber, changeTodoTextInput.value);
         changeTodoPositionInput.value = '';
         changeTodoTextInput.value = '';
+        view.displayTodos();
     },
     deleteTodo: function () {
         let deleteTodoPositionInput = document.getElementById('deleteTodoPositionInput');
         todoList.deleteTodo(deleteTodoPositionInput.valueAsNumber);
         deleteTodoPositionInput.value = '';
-
+        view.displayTodos();
     },
     toggleTodo: function () {
         let toggleTodoPositionInput = document.getElementById('toggleTodoPositionInput');
         todoList.toggleCompleted(toggleTodoPositionInput.valueAsNumber);
         toggleTodoPositionInput.value = '';
+        view.displayTodos();
     }
+};
 
+let view = {
+    displayTodos: function () {
+        let todoLu = document.querySelector('ul');
+        todoLu.innerHTML = '';
+        let todoTextCompletion = '';
+
+        for (let i = 0; i < todoList.todos.length; i++){
+            let todo = todoList.todos[i].todoText;
+            let todoLi = document.createElement('li');
+
+            if(todoList.todos.length === 0) {
+                todoLi.textContent = "Todo List is empty";
+            }else{
+                if(todoList.todos[i].completed === true){
+                    todoTextCompletion = '(X) ' + todo;
+                }else {
+                    todoTextCompletion = '( ) ' + todo;
+                }
+                todoLi.textContent = todoTextCompletion;
+                todoLu.appendChild(todoLi);
+            }
+        }
+    }
 };

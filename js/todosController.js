@@ -31,82 +31,51 @@ let todoList = {
         let allTodos = this.todos.length;
         let completedTodos = 0;
         //count the completed todos
-        for (let i = 0; i < allTodos; i++) {
-            if (this.todos[i].completed === true) {
+        this.todos.forEach(function (todo) {
+            if (todo.completed === true) {
                 completedTodos++;
             }
-        }
-        //case1: if all todos are completed make them as incompleted -- its like when something finishes you restart it
-        for (let i = 0; i < allTodos; i++) {
-            if (allTodos === completedTodos) {
-                for (let i = 0; i < allTodos; i++) {
-                    this.todos[i].completed = false;
-                }
-            }
+        });
+        this.todos.forEach(function(todo) {
+            //case1: if all todos are completed make them as incomplete -- its like when something finishes you restart it
+            if (allTodos === completedTodos)
+                todo.completed = false;
             //case2: if all todos are not completed (either a few n complete or all in complete), make them as complete
-            else {
+            else
+                todo.completed = true;
+        });
+        //----------------------------------------------------------------------------------------------------------------------------------
+
+        /*
+         *  Here is the original code in case of misunderstanding with forEach loops
+         *
+         *
+         * 
                 for (let i = 0; i < allTodos; i++) {
-                    this.todos[i].completed = true;
+                    if (this.todos[i].completed === true) {
+                        completedTodos++;
+                    }
                 }
-            }
-        }
+                //case1: if all todos are completed make them as incompleted -- its like when something finishes you restart it
+                for (let i = 0; i < allTodos; i++) {
+                    if (allTodos === completedTodos) {
+                        for (let i = 0; i < allTodos; i++) {
+                            this.todos[i].completed = false;
+                        }
+                    }
+                    //case2: if all todos are not completed (either a few n complete or all in complete), make them as complete
+                    else {
+                        for (let i = 0; i < allTodos; i++) {
+                            this.todos[i].completed = true;
+                        }
+                    }
+                }*/
+        //----------------------------------------------------------------------------------------------------------------------------------
+
     }
 };
 
-//----------------------------------------------------------------------------------------------------------------------------------
-/*
- * This code is from the stackoverflow thread I posted, below is the link
- * https://stackoverflow.com/questions/47238309/error-cannot-find-module-node-jsdom/47241559?noredirect=1#comment81444646_47241559
- *
-
-const jsdom = require("jsdom/lib/old-api.js");
-const jsdom_hard = require("jsdom/lib/old-api.js").jsdom;
-const fs = require('fs');
-
-jsdom.env(
-    "http://news.ycombinator.com/",
-    ["http://code.jquery.com/jquery.js"],
-    function(err, window) {
-        const $ = window.$;
-        console.log("HN Links");
-        $("td.title:not(:last) a").each(function() {
-            console.log(" -", $(this).text());
-        });
-    }
-);
-
-let markup = fs.readFileSync('foo.html');
-let doc = jsdom_hard(markup, {});
-
-
-function showData() {
-    elem = doc.getElementById('TodosText').innerHTML;
-    console.log("Element value: " + elem)
-}
-showData();
-
-*/
-//----------------------------------------------------------------------------------------------------------------------------------
-/*
- * Refactoring this code, I am keeping this as a comment because this is the normal and
- * more flexible way to do it but I want learn more further
- * You can use either this commented code or the refactored code down there
-
-let displayTodosButton = document.getElementById('displayTodosButton');
-console.log(displayTodosButton);
-
-displayTodosButton.addEventListener('click', function() {
-    todoList.displayTodos();
-});
-
-let toggleAll = document.getElementById('toggleAll');
-toggleAll.addEventListener('click', function() {
-    todoList.allCompleted();
-});
-*/
-//----------------------------------------------------------------------------------------------------------------------------------
-
-//handlers object would give access to function to be attached to buttons in html
+//handlers object give access to the functions in the todoList object by html elements and displays the output on DOM
 let handlers = {
     toggleAll: function () {
         todoList.allCompleted();
@@ -126,10 +95,8 @@ let handlers = {
         changeTodoTextInput.value = '';
         view.displayTodos();
     },
-    deleteTodo: function () {
-        let deleteTodoPositionInput = document.getElementById('deleteTodoPositionInput');
-        todoList.deleteTodo(deleteTodoPositionInput.valueAsNumber);
-        deleteTodoPositionInput.value = '';
+    deleteTodo: function (position) {
+        todoList.deleteTodo(position);
         view.displayTodos();
     },
     toggleTodo: function () {
@@ -140,27 +107,50 @@ let handlers = {
     }
 };
 
+//view object takes care of the view of the outputs in the DOM
 let view = {
     displayTodos: function () {
+        debugger;
         let todoLu = document.querySelector('ul');
         todoLu.innerHTML = '';
-        let todoTextCompletion = '';
 
-        for (let i = 0; i < todoList.todos.length; i++){
-            let todo = todoList.todos[i].todoText;
+        todoList.todos.forEach(function (todo, position) {
             let todoLi = document.createElement('li');
+            let todoTextCompletion = '';
 
-            if(todoList.todos.length === 0) {
-                todoLi.textContent = "Todo List is empty";
-            }else{
-                if(todoList.todos[i].completed === true){
-                    todoTextCompletion = '(X) ' + todo;
+                if(todo.completed === true){
+                    todoTextCompletion = '(X) ' + todo.todoText;
                 }else {
-                    todoTextCompletion = '( ) ' + todo;
+                    todoTextCompletion = '( ) ' + todo.todoText;
                 }
                 todoLi.textContent = todoTextCompletion;
+                //this generates an id for the elements generates with the iteration variable i
+                todoLi.id = position;
+                todoLi.appendChild(this.createDeleteButton());
                 todoLu.appendChild(todoLi);
+        }, this);
+
+    },
+
+    //this fucntion creates a delete button
+    createDeleteButton: function () {
+        let deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.className = 'deleteButton';
+        return deleteButton;
+
+    },
+
+    //creating setEventListeners as this will listen to events and accordingly it would function
+    setEventListeners: function () {
+        let todoUl = document.querySelector('ul');
+        todoUl.addEventListener('click', function (event) {
+            let elementClicked = event.target;
+            if(elementClicked.className === 'deleteButton'){
+                handlers.deleteTodo(parseInt(elementClicked.parentNode.id));
             }
-        }
+        })
     }
 };
+
+view.setEventListeners();
